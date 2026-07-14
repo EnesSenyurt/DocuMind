@@ -4,7 +4,7 @@ Chat with your own documents — a self-hosted RAG (Retrieval-Augmented Generati
 
 Upload PDFs, DOCX, TXT, or Markdown files and ask questions about them. Answers are grounded in your documents with mandatory source citations; if the documents don't contain the answer, DocuMind says so instead of hallucinating.
 
-> **Status: work in progress.** Phases 1–2 are done: project skeleton + config + Docker, and the full ingestion pipeline (upload → extract → chunk → embed → store) with document management endpoints. Retrieval/chat, the chat UI, and the eval module land in the next phases, and this README will grow an architecture diagram, screenshots, and a design-decisions section alongside them.
+> **Status: work in progress.** Phases 1–3 are done: project skeleton + config + Docker, the full ingestion pipeline (upload → extract → chunk → embed → store), and grounded chat — retrieval with a relevance threshold, citations, an "I don't have information" guard, multi-turn history, and a swappable LLM provider. The chat UI and the eval module land in the next phases, and this README will grow an architecture diagram, screenshots, and a design-decisions section alongside them.
 
 ## Stack
 
@@ -35,8 +35,12 @@ Backend API docs: http://localhost:8000/docs — health check at `GET /api/healt
 | `POST` | `/api/documents` | Upload a PDF/DOCX/TXT/MD file; ingests and returns document metadata |
 | `GET` | `/api/documents` | List ingested documents |
 | `DELETE` | `/api/documents/{id}` | Remove a document and its vectors |
+| `POST` | `/api/chat` | Ask a question; returns a grounded answer with citations (`conversation_id` optional for multi-turn) |
+| `GET` | `/api/conversations` | List conversations |
+| `GET` | `/api/conversations/{id}` | Full message history with citations |
+| `DELETE` | `/api/conversations/{id}` | Delete a conversation |
 
-Upload rejects unsupported types with `415` and empty/text-less files with `422`.
+Upload rejects unsupported types with `415` and empty/text-less files with `422`. Chat returns `grounded: false` with the message _"I don't have information about this in your documents."_ when nothing clears the relevance threshold — the LLM is never called in that case. An LLM provider failure surfaces as `502`.
 
 ## Running without Docker
 
