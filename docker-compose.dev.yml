@@ -1,0 +1,24 @@
+# Development override: hot reload for backend (uvicorn --reload) and
+# frontend (vite dev server) with source mounted from the host.
+services:
+  backend:
+    environment:
+      - ENVIRONMENT=development
+    volumes:
+      - ./backend/app:/app/app:ro
+      - documind_data:/app/data
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+      target: build
+    environment:
+      - VITE_API_PROXY_TARGET=http://backend:8000
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+    command: npm run dev -- --host
+    ports:
+      - "5173:5173"

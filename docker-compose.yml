@@ -1,0 +1,26 @@
+# Production-oriented setup: built images, nginx-served frontend.
+# For local development with hot reload, add the dev override:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+services:
+  backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      - ENVIRONMENT=production
+      - DATA_DIR=/app/data
+    volumes:
+      - documind_data:/app/data
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+
+volumes:
+  documind_data:

@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+dist/
+*.local
+
+# Environment
+.env
+
+# Data (runtime state, never committed)
+data/
+chroma_data/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+*.tsbuildinfo
