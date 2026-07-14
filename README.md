@@ -4,7 +4,7 @@ Chat with your own documents — a self-hosted RAG (Retrieval-Augmented Generati
 
 Upload PDFs, DOCX, TXT, or Markdown files and ask questions about them. Answers are grounded in your documents with mandatory source citations; if the documents don't contain the answer, DocuMind says so instead of hallucinating.
 
-> **Status: work in progress.** Phase 1 (skeleton, config, Docker) is done. Ingestion, retrieval/chat, the chat UI, and the eval module land in the next phases, and this README will grow an architecture diagram, screenshots, and a design-decisions section alongside them.
+> **Status: work in progress.** Phases 1–2 are done: project skeleton + config + Docker, and the full ingestion pipeline (upload → extract → chunk → embed → store) with document management endpoints. Retrieval/chat, the chat UI, and the eval module land in the next phases, and this README will grow an architecture diagram, screenshots, and a design-decisions section alongside them.
 
 ## Stack
 
@@ -26,6 +26,17 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
 Backend API docs: http://localhost:8000/docs — health check at `GET /api/health`.
+
+## API (so far)
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/api/health` | Liveness + version |
+| `POST` | `/api/documents` | Upload a PDF/DOCX/TXT/MD file; ingests and returns document metadata |
+| `GET` | `/api/documents` | List ingested documents |
+| `DELETE` | `/api/documents/{id}` | Remove a document and its vectors |
+
+Upload rejects unsupported types with `415` and empty/text-less files with `422`.
 
 ## Running without Docker
 
