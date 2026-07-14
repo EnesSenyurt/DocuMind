@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     openai_api_key: str = ""
     anthropic_api_key: str = ""
+    llm_max_tokens: int = Field(default=1024, gt=0)
+    llm_temperature: float = Field(default=0.2, ge=0.0, le=2.0)
+    llm_timeout_seconds: float = Field(default=30.0, gt=0)
 
     # Embeddings
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
@@ -44,6 +47,10 @@ class Settings(BaseSettings):
     # Retrieval
     retrieval_top_k: int = Field(default=5, gt=0)
     relevance_threshold: float = Field(default=0.25, ge=0.0, le=1.0)
+
+    # Conversation
+    # How many prior messages (user + assistant) to replay as chat history.
+    max_history_messages: int = Field(default=10, ge=0)
 
     # Storage
     data_dir: Path = Path("./data")
