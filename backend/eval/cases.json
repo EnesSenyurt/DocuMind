@@ -1,0 +1,22 @@
+[
+  {
+    "question": "How does gradient descent minimize the loss function?",
+    "expected_source": "machine_learning.md"
+  },
+  {
+    "question": "What causes a model to overfit the training data and how do you prevent it?",
+    "expected_source": "machine_learning.md"
+  },
+  {
+    "question": "How does the asyncio event loop schedule and run coroutines?",
+    "expected_source": "python_async.md"
+  },
+  {
+    "question": "What is the difference between a Docker image and a container?",
+    "expected_source": "docker_basics.md"
+  },
+  {
+    "question": "How do I write a Dockerfile to build an image with dependencies?",
+    "expected_source": "docker_basics.md"
+  }
+]
