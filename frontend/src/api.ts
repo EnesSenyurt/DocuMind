@@ -1,5 +1,7 @@
 import type {
   ChatResponse,
+  ConversationDetail,
+  ConversationListResponse,
   DocumentListResponse,
   IngestResponse,
 } from './types'
@@ -57,4 +59,21 @@ export async function sendChat(
   })
   if (!response.ok) return parseError(response)
   return response.json()
+}
+
+export async function listConversations(): Promise<ConversationListResponse> {
+  const response = await fetch(`${BASE}/conversations`)
+  if (!response.ok) return parseError(response)
+  return response.json()
+}
+
+export async function getConversation(id: string): Promise<ConversationDetail> {
+  const response = await fetch(`${BASE}/conversations/${id}`)
+  if (!response.ok) return parseError(response)
+  return response.json()
+}
+
+export async function deleteConversation(id: string): Promise<void> {
+  const response = await fetch(`${BASE}/conversations/${id}`, { method: 'DELETE' })
+  if (!response.ok) return parseError(response)
 }

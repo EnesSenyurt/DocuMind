@@ -17,7 +17,11 @@ def build_llm_provider(settings: Settings) -> LLMProvider:
         "timeout_seconds": settings.llm_timeout_seconds,
     }
     if settings.llm_provider == "gemini":
-        return GeminiProvider(api_key=settings.gemini_api_key, **common)
+        return GeminiProvider(
+            api_key=settings.gemini_api_key,
+            thinking_level=settings.gemini_thinking_level,
+            **common,
+        )
     if settings.llm_provider == "openai":
         return OpenAIProvider(api_key=settings.openai_api_key, **common)
     if settings.llm_provider == "anthropic":
