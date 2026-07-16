@@ -4,16 +4,7 @@ Chat with your own documents — a self-hosted RAG (Retrieval-Augmented Generati
 
 Upload PDFs, DOCX, TXT, or Markdown files and ask questions about them. Answers are grounded in your documents with **mandatory source citations** (document + page + section); if the documents don't contain the answer, DocuMind says _"I don't have information about this in your documents"_ instead of hallucinating.
 
-![DocuMind chat UI](docs/screenshot.png)
-
-## Highlights
-
-- **Grounded answers with citations.** Every answer cites the exact chunks it used, with filename, page number (PDF), and section heading. The UI renders expandable source snippets under each answer.
-- **A real "no info" guard.** If nothing clears the relevance threshold, the LLM is never called — the assistant declines instead of guessing.
-- **Prompt-injection aware.** Retrieved chunks are wrapped as untrusted **data**, and the system prompt instructs the model to ignore any instructions hiding inside them.
-- **Swappable LLM.** Gemini Flash by default; OpenAI or Anthropic via a single config change, all behind one interface.
-- **Multi-turn.** Conversations and citations persist in SQLite.
-- **Evaluated.** A small `eval/` harness measures retrieval hit-rate@k and MRR against labelled (question, expected-source) pairs.
+> **Status: work in progress.** Phases 1–3 are done: project skeleton + config + Docker, the full ingestion pipeline (upload → extract → chunk → embed → store), and grounded chat — retrieval with a relevance threshold, citations, an "I don't have information" guard, multi-turn history, and a swappable LLM provider. The chat UI and the eval module land in the next phases, and this README will grow an architecture diagram, screenshots, and a design-decisions section alongside them.
 
 ## Stack
 
@@ -77,6 +68,21 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
 Backend API docs: http://localhost:8000/docs — health check at `GET /api/health`.
+
+## API (so far)
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/api/health` | Liveness + version |
+| `POST` | `/api/documents` | Upload a PDF/DOCX/TXT/MD file; ingests and returns document metadata |
+| `GET` | `/api/documents` | List ingested documents |
+| `DELETE` | `/api/documents/{id}` | Remove a document and its vectors |
+| `POST` | `/api/chat` | Ask a question; returns a grounded answer with citations (`conversation_id` optional for multi-turn) |
+| `GET` | `/api/conversations` | List conversations |
+| `GET` | `/api/conversations/{id}` | Full message history with citations |
+| `DELETE` | `/api/conversations/{id}` | Delete a conversation |
+
+Upload rejects unsupported types with `415` and empty/text-less files with `422`. Chat returns `grounded: false` with the message _"I don't have information about this in your documents."_ when nothing clears the relevance threshold — the LLM is never called in that case. An LLM provider failure surfaces as `502`.
 
 ## Running without Docker
 
