@@ -4,7 +4,7 @@ Chat with your own documents — a self-hosted RAG (Retrieval-Augmented Generati
 
 Upload PDFs, DOCX, TXT, or Markdown files and ask questions about them. Answers are grounded in your documents with mandatory source citations; if the documents don't contain the answer, DocuMind says so instead of hallucinating.
 
-> **Status: work in progress.** Phases 1–3 are done: project skeleton + config + Docker, the full ingestion pipeline (upload → extract → chunk → embed → store), and grounded chat — retrieval with a relevance threshold, citations, an "I don't have information" guard, multi-turn history, and a swappable LLM provider. The chat UI and the eval module land in the next phases, and this README will grow an architecture diagram, screenshots, and a design-decisions section alongside them.
+> **Status: work in progress.** Phases 1–4 are done: project skeleton + config + Docker, the full ingestion pipeline (upload → extract → chunk → embed → store), grounded chat (retrieval with a relevance threshold, citations, an "I don't have information" guard, multi-turn history, swappable LLM provider), and the React chat UI — a document sidebar (upload/list/delete) and a chat panel with expandable source snippets. The eval module lands next, and this README will grow an architecture diagram, screenshots, and a design-decisions section alongside it.
 
 ## Stack
 
