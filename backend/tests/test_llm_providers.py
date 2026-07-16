@@ -50,6 +50,43 @@ def test_gemini_extract_text_empty_completion_raises():
         _extract_text({"candidates": [{"content": {"parts": [{"text": "   "}]}}]})
 
 
+def test_gemini_extract_text_max_tokens_empty_gives_actionable_error():
+    data = {"candidates": [{"finishReason": "MAX_TOKENS", "content": {"parts": []}}]}
+    with pytest.raises(LLMError, match="LLM_MAX_TOKENS"):
+        _extract_text(data)
+
+
+def test_gemini_extract_text_returns_partial_answer_on_truncation():
+    data = {
+        "candidates": [
+            {"finishReason": "MAX_TOKENS", "content": {"parts": [{"text": "partial answer"}]}}
+        ]
+    }
+    assert _extract_text(data) == "partial answer"
+
+
+async def test_gemini_payload_includes_thinking_level_only_when_set(monkeypatch):
+    captured = {}
+
+    async def fake_post(self, url, *, json, headers=None, params=None):
+        captured["json"] = json
+        return {"candidates": [{"content": {"parts": [{"text": "ok"}]}}]}
+
+    monkeypatch.setattr(GeminiProvider, "_post_json", fake_post)
+
+    # With a thinking level configured -> present in generationConfig.
+    provider = GeminiProvider(api_key="k", thinking_level="low", **_COMMON)
+    await provider.generate(system="s", messages=[LLMMessage("user", "hi")])
+    gen_cfg = captured["json"]["generationConfig"]
+    assert gen_cfg["thinkingConfig"] == {"thinkingLevel": "low"}
+    assert gen_cfg["maxOutputTokens"] == _COMMON["max_tokens"]
+
+    # Default (empty) -> field omitted, so we never send an unsupported key.
+    provider = GeminiProvider(api_key="k", **_COMMON)
+    await provider.generate(system="s", messages=[LLMMessage("user", "hi")])
+    assert "thinkingConfig" not in captured["json"]["generationConfig"]
+
+
 @pytest.mark.parametrize(
     ("provider", "cls"),
     [

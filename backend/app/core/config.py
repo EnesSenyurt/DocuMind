@@ -29,13 +29,20 @@ class Settings(BaseSettings):
 
     # LLM
     llm_provider: Literal["gemini", "openai", "anthropic"] = "gemini"
-    llm_model: str = "gemini-2.5-flash"
+    llm_model: str = "gemini-3.5-flash"
     gemini_api_key: str = ""
     openai_api_key: str = ""
     anthropic_api_key: str = ""
-    llm_max_tokens: int = Field(default=1024, gt=0)
+    # Gemini 2.5/3.x are "thinking" models whose reasoning tokens count against
+    # maxOutputTokens; a small budget gets consumed by thinking and truncates the
+    # visible answer mid-sentence. Keep this generous so thinking + answer both fit.
+    llm_max_tokens: int = Field(default=4096, gt=0)
     llm_temperature: float = Field(default=0.2, ge=0.0, le=2.0)
-    llm_timeout_seconds: float = Field(default=30.0, gt=0)
+    llm_timeout_seconds: float = Field(default=60.0, gt=0)
+    # Optional, Gemini 3.x only: "minimal" | "low" | "medium" | "high". Empty =
+    # don't send it (model default). Lower levels reduce latency for grounded QA.
+    # (Gemini 2.5 models use a numeric thinkingBudget instead and ignore this.)
+    gemini_thinking_level: str = ""
 
     # Embeddings
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"

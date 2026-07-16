@@ -45,3 +45,27 @@ export interface ChatMessage {
   pending?: boolean
   error?: boolean
 }
+
+export interface ConversationSummary {
+  id: string
+  created_at: string
+  message_count: number
+  title: string | null
+}
+
+export interface ConversationListResponse {
+  conversations: ConversationSummary[]
+  total: number
+}
+
+export interface MessageOut {
+  role: 'user' | 'assistant'
+  content: string
+  citations: Citation[]
+  created_at: string
+}
+
+export interface ConversationDetail {
+  id: string
+  messages: MessageOut[]
+}
