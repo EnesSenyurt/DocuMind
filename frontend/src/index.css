@@ -1,32 +1,35 @@
 /* ============================================================
    DocuMind design system
-   - Ink-dark sidebar in both themes (brand rail), theme-aware
-     content area (light/dark via prefers-color-scheme)
-   - Brand accent: teal -> indigo gradient
+   - Theme-aware throughout: in light mode the sidebar is light too;
+     in dark mode both sidebar and content go dark.
+   - Brand accent: violet -> pink gradient
    ============================================================ */
 
 :root {
   /* content area (light) */
-  --bg: #f4f6f9;
+  --bg: #f6f5f9;
   --surface: #ffffff;
-  --surface-2: #eef1f5;
-  --border: #e3e7ed;
-  --text: #171b22;
-  --text-muted: #67707e;
+  --surface-2: #efedf4;
+  --border: #e5e2ee;
+  --text: #1a1526;
+  --text-muted: #6b6577;
 
-  /* brand */
-  --accent: #0d9488;
-  --accent-2: #6366f1;
-  --accent-grad: linear-gradient(135deg, #14b8a6 0%, #6366f1 100%);
-  --accent-soft: rgba(20, 184, 166, 0.12);
+  /* brand: violet -> pink */
+  --accent: #7c3aed;
+  --accent-2: #db2777;
+  --accent-grad: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  --accent-soft: rgba(139, 92, 246, 0.12);
 
-  /* ink sidebar (same in both themes) */
-  --ink: #0e1420;
-  --ink-2: #16202f;
-  --ink-text: #e7ebf2;
-  --ink-muted: #8b95a7;
-  --ink-line: rgba(255, 255, 255, 0.08);
-  --ink-hover: rgba(255, 255, 255, 0.06);
+  /* sidebar (light) */
+  --side-bg: #ffffff;
+  --side-text: #1a1526;
+  --side-muted: #6b6577;
+  --side-line: #e7e4ef;
+  --side-hover: rgba(124, 58, 237, 0.07);
+  --side-item: #f5f3fa;
+  --side-badge: rgba(139, 92, 246, 0.13);
+  --side-badge-text: #7c3aed;
+  --side-scroll: rgba(0, 0, 0, 0.16);
 
   --danger: #dc2626;
   --radius: 14px;
@@ -37,15 +40,27 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0b0e13;
-    --surface: #141920;
-    --surface-2: #1b212b;
-    --border: #262d38;
-    --text: #e8eaee;
-    --text-muted: #98a2b0;
-    --accent: #2dd4bf;
-    --accent-soft: rgba(45, 212, 191, 0.12);
+    /* content area (dark) */
+    --bg: #0c0a12;
+    --surface: #16131f;
+    --surface-2: #1e1a2b;
+    --border: #2a2438;
+    --text: #ece9f1;
+    --text-muted: #9a93a8;
+    --accent: #a78bfa;
+    --accent-soft: rgba(167, 139, 250, 0.14);
     --danger: #f87171;
+
+    /* sidebar (dark) */
+    --side-bg: #100d19;
+    --side-text: #ece9f1;
+    --side-muted: #8b8399;
+    --side-line: rgba(255, 255, 255, 0.08);
+    --side-hover: rgba(255, 255, 255, 0.06);
+    --side-item: rgba(255, 255, 255, 0.04);
+    --side-badge: rgba(167, 139, 250, 0.16);
+    --side-badge-text: #c4b5fd;
+    --side-scroll: rgba(255, 255, 255, 0.14);
   }
 }
 
@@ -95,7 +110,7 @@ button {
   color: #fff;
   background: var(--accent-grad);
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(20, 184, 166, 0.25);
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.28);
   transition: filter 0.15s ease, transform 0.05s ease;
 }
 
@@ -143,8 +158,9 @@ button {
 .sidebar {
   width: 304px;
   flex-shrink: 0;
-  background: var(--ink);
-  color: var(--ink-text);
+  background: var(--side-bg);
+  color: var(--side-text);
+  border-right: 1px solid var(--side-line);
   display: flex;
   flex-direction: column;
   padding: 1.1rem 1rem;
@@ -153,7 +169,7 @@ button {
 }
 
 .sidebar .muted {
-  color: var(--ink-muted);
+  color: var(--side-muted);
 }
 
 .brand {
@@ -194,7 +210,7 @@ button {
 
 .brand-tag {
   font-size: 0.7rem;
-  color: var(--ink-muted);
+  color: var(--side-muted);
 }
 
 .section-label {
@@ -202,7 +218,7 @@ button {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--ink-muted);
+  color: var(--side-muted);
 }
 
 .sidebar-header {
@@ -213,24 +229,24 @@ button {
 }
 
 .sidebar .btn-ghost {
-  border-color: var(--ink-line);
-  color: var(--ink-muted);
+  border-color: var(--side-line);
+  color: var(--side-muted);
 }
 
 .sidebar .btn-ghost:hover:not(:disabled) {
-  color: var(--ink-text);
-  border-color: var(--ink-muted);
+  color: var(--side-text);
+  border-color: var(--side-muted);
 }
 
 .sidebar-hint {
   font-size: 0.72rem;
-  color: var(--ink-muted);
+  color: var(--side-muted);
 }
 
 .sidebar-error {
   font-size: 0.78rem;
-  color: #fda4af;
-  background: rgba(220, 38, 38, 0.18);
+  color: var(--danger);
+  background: rgba(220, 38, 38, 0.1);
   padding: 0.4rem 0.6rem;
   border-radius: 8px;
 }
@@ -244,7 +260,7 @@ button {
   flex: 0 1 auto;
   min-height: 0;
   padding-bottom: 0.9rem;
-  border-bottom: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--side-line);
 }
 
 .new-chat-btn {
@@ -281,11 +297,11 @@ button {
   border: none;
   border-radius: 9px;
   cursor: pointer;
-  color: var(--ink-text);
+  color: var(--side-text);
 }
 
 .conversation-item:hover {
-  background: var(--ink-hover);
+  background: var(--side-hover);
 }
 
 .conversation-item.active {
@@ -304,7 +320,7 @@ button {
 
 .conversation-meta {
   font-size: 0.68rem;
-  color: var(--ink-muted);
+  color: var(--side-muted);
 }
 
 /* Documents: always fully visible; fills remaining sidebar height and its own
@@ -332,8 +348,8 @@ button {
   align-items: center;
   gap: 0.6rem;
   padding: 0.5rem 0.6rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--ink-line);
+  background: var(--side-item);
+  border: 1px solid var(--side-line);
   border-radius: 10px;
 }
 
@@ -341,8 +357,8 @@ button {
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  background: var(--accent-soft);
-  color: #5eead4;
+  background: var(--side-badge);
+  color: var(--side-badge-text);
   display: grid;
   place-items: center;
   font-size: 0.58rem;
@@ -368,13 +384,13 @@ button {
 
 .doc-meta {
   font-size: 0.68rem;
-  color: var(--ink-muted);
+  color: var(--side-muted);
 }
 
 .doc-delete {
   border: none;
   background: transparent;
-  color: var(--ink-muted);
+  color: var(--side-muted);
   font-size: 1.15rem;
   line-height: 1;
   cursor: pointer;
@@ -383,11 +399,11 @@ button {
 }
 
 .doc-delete:hover {
-  color: #fda4af;
-  background: rgba(220, 38, 38, 0.18);
+  color: var(--danger);
+  background: rgba(220, 38, 38, 0.12);
 }
 
-/* Slim scrollbars inside the dark rail */
+/* Slim scrollbars inside the rail */
 .conversation-list::-webkit-scrollbar,
 .doc-list::-webkit-scrollbar {
   width: 6px;
@@ -395,7 +411,7 @@ button {
 
 .conversation-list::-webkit-scrollbar-thumb,
 .doc-list::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
+  background: var(--side-scroll);
   border-radius: 3px;
 }
 
@@ -467,7 +483,7 @@ button {
   display: grid;
   place-items: center;
   margin-bottom: 0.6rem;
-  box-shadow: 0 8px 30px rgba(20, 184, 166, 0.35);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.35);
 }
 
 .empty-mark::before {
@@ -537,18 +553,18 @@ button {
   background: var(--accent-grad);
   color: #fff;
   border-radius: 16px 16px 4px 16px;
-  box-shadow: 0 3px 14px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 3px 14px rgba(219, 39, 119, 0.22);
 }
 
 .message-user .message-role {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .message-assistant {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px 16px 16px 4px;
-  box-shadow: 0 1px 4px rgba(10, 14, 20, 0.05);
+  box-shadow: 0 1px 4px rgba(10, 8, 16, 0.05);
 }
 
 .message-noinfo .message-content {
@@ -745,6 +761,8 @@ button {
     width: 100%;
     height: auto;
     max-height: 44vh;
+    border-right: none;
+    border-bottom: 1px solid var(--side-line);
   }
   .conversation-list {
     max-height: 132px;
