@@ -35,9 +35,9 @@ export default function ChatPanel({
   return (
     <section className="chat">
       <header className="chat-header">
-        <div>
-          <h1>DocuMind</h1>
-          <span className="tagline">Chat grounded in your documents</span>
+        <div className="chat-header-title">
+          <h1>Chat</h1>
+          <span className="tagline">Answers grounded in your documents, with sources</span>
         </div>
         <button className="btn-ghost" onClick={onNewChat} disabled={messages.length === 0}>
           New chat
@@ -47,29 +47,36 @@ export default function ChatPanel({
       <div className="messages" ref={scrollRef}>
         {messages.length === 0 ? (
           <div className="empty-chat">
+            <div className="empty-mark" aria-hidden="true" />
             <p className="empty-title">Ask a question about your documents</p>
             <p className="muted">
               {hasDocuments
-                ? 'Answers are grounded in your uploaded files, with source citations.'
+                ? 'Every answer cites its sources — expand them under each reply.'
                 : 'Upload a document from the sidebar to get started.'}
             </p>
           </div>
         ) : (
-          messages.map((message, i) => <MessageBubble key={i} message={message} />)
+          <div className="messages-inner">
+            {messages.map((message, i) => (
+              <MessageBubble key={i} message={message} />
+            ))}
+          </div>
         )}
       </div>
 
       <form className="composer" onSubmit={submit}>
-        <input
-          type="text"
-          value={input}
-          placeholder={hasDocuments ? 'Ask a question…' : 'Upload a document first…'}
-          onChange={(e) => setInput(e.target.value)}
-          disabled={busy}
-        />
-        <button className="btn-primary" type="submit" disabled={busy || !input.trim()}>
-          {busy ? '…' : 'Send'}
-        </button>
+        <div className="composer-inner">
+          <input
+            type="text"
+            value={input}
+            placeholder={hasDocuments ? 'Ask a question…' : 'Upload a document first…'}
+            onChange={(e) => setInput(e.target.value)}
+            disabled={busy}
+          />
+          <button className="btn-accent" type="submit" disabled={busy || !input.trim()}>
+            {busy ? '…' : 'Send'}
+          </button>
+        </div>
       </form>
     </section>
   )

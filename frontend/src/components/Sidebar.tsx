@@ -65,15 +65,21 @@ export default function Sidebar({
 
   return (
     <aside className="sidebar">
+      <div className="brand">
+        <div className="brand-mark" aria-hidden="true" />
+        <div className="brand-text">
+          <span className="brand-name">DocuMind</span>
+          <span className="brand-tag">Chat with your documents</span>
+        </div>
+      </div>
+
       {/* Conversations: height-capped so it scrolls internally and never
           pushes the Documents section below out of view. */}
       <div className="conversations-section">
-        <div className="sidebar-header">
-          <h2>Conversations</h2>
-        </div>
-        <button className="btn-primary new-chat-btn" onClick={onNewChat}>
-          + New chat
+        <button className="btn-accent new-chat-btn" onClick={onNewChat}>
+          <span className="plus" aria-hidden="true">+</span> New chat
         </button>
+        <p className="section-label">Conversations</p>
         <div className="conversation-list">
           {conversationsLoading ? (
             <p className="muted">Loading…</p>
@@ -102,9 +108,9 @@ export default function Sidebar({
       {/* Documents: always fully visible, scrolls internally on its own if long. */}
       <div className="documents-section">
         <div className="sidebar-header">
-          <h2>Documents</h2>
+          <p className="section-label">Documents</p>
           <button
-            className="btn-primary"
+            className="btn-ghost btn-small"
             onClick={() => inputRef.current?.click()}
             disabled={uploading}
           >
@@ -131,6 +137,9 @@ export default function Sidebar({
           ) : (
             documents.map((doc) => (
               <div key={doc.id} className="doc-item">
+                <div className="doc-icon" aria-hidden="true">
+                  {doc.filename.split('.').pop()?.slice(0, 4).toUpperCase() || 'DOC'}
+                </div>
                 <div className="doc-info">
                   <span className="doc-name" title={doc.filename}>
                     {doc.filename}
@@ -144,6 +153,7 @@ export default function Sidebar({
                 <button
                   className="doc-delete"
                   title="Delete document"
+                  aria-label={`Delete ${doc.filename}`}
                   onClick={() => handleDelete(doc.id)}
                 >
                   ×

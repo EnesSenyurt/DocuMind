@@ -19,18 +19,22 @@ export default function Citations({ citations }: { citations: Citation[] }) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
       >
-        {open ? '▾' : '▸'} {citations.length} source{citations.length > 1 ? 's' : ''}
+        <span className={'chevron' + (open ? ' open' : '')} aria-hidden="true" />
+        {citations.length} source{citations.length > 1 ? 's' : ''}
       </button>
       {open && (
         <ul className="citation-list">
           {citations.map((citation) => (
             <li key={citation.marker} className="citation-card">
               <div className="citation-head">
-                <span className="citation-marker">[{citation.marker}]</span>
+                <span className="citation-marker">{citation.marker}</span>
                 <span className="citation-source">{sourceLabel(citation)}</span>
                 <span className="citation-score" title="similarity score">
                   {(citation.score * 100).toFixed(0)}%
                 </span>
+              </div>
+              <div className="citation-meter" aria-hidden="true">
+                <span style={{ width: `${Math.round(citation.score * 100)}%` }} />
               </div>
               <p className="citation-snippet">{citation.snippet}</p>
             </li>

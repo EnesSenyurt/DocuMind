@@ -8,22 +8,25 @@ export default function MessageBubble({ message }: { message: ChatMessage }) {
   if (message.grounded === false) classes.push('message-noinfo')
 
   return (
-    <div className={classes.join(' ')}>
-      <div className="message-role">{isUser ? 'You' : 'DocuMind'}</div>
-      <div className="message-content">
-        {message.pending ? (
-          <span className="typing">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        ) : (
-          message.content
+    <div className={'message-row' + (isUser ? ' message-row-user' : '')}>
+      {!isUser && <div className="avatar" aria-hidden="true" />}
+      <div className={classes.join(' ')}>
+        <div className="message-role">{isUser ? 'You' : 'DocuMind'}</div>
+        <div className="message-content">
+          {message.pending ? (
+            <span className="typing">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          ) : (
+            message.content
+          )}
+        </div>
+        {message.citations && message.citations.length > 0 && (
+          <Citations citations={message.citations} />
         )}
       </div>
-      {message.citations && message.citations.length > 0 && (
-        <Citations citations={message.citations} />
-      )}
     </div>
   )
 }
